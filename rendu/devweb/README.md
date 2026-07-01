@@ -53,9 +53,15 @@ OLLAMA_API_URL=http://192.168.1.42:11434 OLLAMA_MODEL=phi3-financial OLLAMA_NUM_
 ## Fonctionnalites
 
 - Chat en streaming, les tokens s'affichent au fur et a mesure.
-- Historique de conversation conserve cote client pendant la session.
+- **Bouton Stop** pour interrompre une generation en cours (le texte partiel est conserve).
+- **Nouvelle conversation** (bouton +) et **Regenerer** la derniere reponse.
+- **Persistance** : l'historique est sauvegarde en `localStorage` et survit au rafraichissement.
+- **Copier** une reponse en un clic, avec **horodatage** de chaque message.
+- **Mode clair / sombre** (bouton lune/soleil), preference memorisee et respect du theme systeme.
 - Rendu Markdown simple pour les reponses du modele.
 - Indicateur d'etat de connexion au serveur Ollama, verifie toutes les 5 secondes via `/api/health`.
+- **Bandeau hors-ligne** : quand Ollama est injoignable ou le modele absent, un bandeau
+  affiche la commande exacte a lancer pour corriger.
 - Backend Flask proxy vers Ollama : le navigateur ne contacte jamais Ollama directement.
 
 ## Architecture
