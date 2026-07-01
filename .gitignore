@@ -1,2 +1,4 @@
 datasets/dataset_v0.json
+datasets/medical_dataset_raw.parquet
+datasets/medical_dataset_clean_full.json
 .DS_Store

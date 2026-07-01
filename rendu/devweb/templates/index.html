@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechCorp Financial Assistant</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="title">
+        <span class="logo" aria-hidden="true">TC</span>
+        <div>
+          <h1>TechCorp Financial Assistant</h1>
+          <span class="model-name">{{ model }}</span>
+        </div>
+      </div>
+      <div class="status" id="status">
+        <span class="dot" id="status-dot"></span>
+        <span id="status-text">V&eacute;rification...</span>
+      </div>
+    </header>
+
+    <main class="chat" id="chat">
+      <div class="message assistant">
+        <div class="avatar" aria-hidden="true">AI</div>
+        <div class="bubble">
+          Bonjour, je suis l'assistant financier de TechCorp. Posez-moi vos questions sur la finance,
+          l'investissement, le budget ou le trading.
+        </div>
+      </div>
+      <div class="suggestions" aria-label="Suggestions">
+        <button type="button" data-prompt="R&eacute;sume les risques principaux d'un portefeuille expos&eacute; aux actions tech.">Risques portefeuille</button>
+        <button type="button" data-prompt="Explique la diff&eacute;rence entre ETF obligataire et action &agrave; dividendes.">ETF vs dividendes</button>
+        <button type="button" data-prompt="Aide-moi &agrave; construire un budget mensuel simple.">Budget mensuel</button>
+      </div>
+    </main>
+
+    <form class="composer" id="composer">
+      <textarea id="input" placeholder="&Eacute;crivez votre message..." rows="1" required></textarea>
+      <button type="submit" id="send-btn" aria-label="Envoyer">
+        <span>Envoyer</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h13M13 6l6 6-6 6" />
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
