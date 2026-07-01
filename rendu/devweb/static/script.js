@@ -17,13 +17,13 @@ const STORAGE_KEY = "techcorp_chat_history";
 const THEME_KEY = "techcorp_theme";
 
 const WELCOME =
-  "Bonjour, je suis l'assistant financier de TechCorp. Posez-moi vos questions sur la finance, " +
-  "l'investissement, le budget ou le trading.";
+  "Bonjour, je suis **Finora**, votre assistant financier. Je peux vous aider à mieux comprendre " +
+  "vos investissements, structurer un budget ou analyser les risques d'une stratégie.";
 
 const SUGGESTIONS = [
-  { label: "Risques portefeuille", prompt: "Résume les risques principaux d'un portefeuille exposé aux actions tech." },
-  { label: "ETF vs dividendes", prompt: "Explique la différence entre ETF obligataire et action à dividendes." },
-  { label: "Budget mensuel", prompt: "Aide-moi à construire un budget mensuel simple." },
+  { label: "Analyser un portefeuille", prompt: "Résume les risques principaux d'un portefeuille exposé aux actions tech." },
+  { label: "Comparer des placements", prompt: "Explique la différence entre ETF obligataire et action à dividendes." },
+  { label: "Construire un budget", prompt: "Aide-moi à construire un budget mensuel simple." },
 ];
 
 // Conversation state: array of { role, content, ts }. Persisted to localStorage.
