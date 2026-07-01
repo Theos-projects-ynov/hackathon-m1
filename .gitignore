@@ -2,3 +2,18 @@ datasets/dataset_v0.json
 datasets/medical_dataset_raw.parquet
 datasets/medical_dataset_clean_full.json
 .DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Sorties d'audit / entraînement (générées)
+backdoor_audit_results.json
+finance_model_clean/
+phi3_finance_merged/
+*.gguf
+
+# Environnements
+.venv/
+venv/
