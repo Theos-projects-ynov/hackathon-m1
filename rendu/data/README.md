@@ -1,5 +1,7 @@
 # DATA — Mission expérimentale : dataset médical
 
+**Auteur** : Arthur Ravel
+
 Analyse et nettoyage du dataset hérité `ruslanmv/ai-medical-chatbot` (HuggingFace),
 en préparation du fine-tuning LoRA du modèle médical expérimental (équipe IA).
 

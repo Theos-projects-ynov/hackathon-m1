@@ -1,5 +1,7 @@
 # DATA — Mission production : validation du dataset finance
 
+**Auteur** : Arthur Ravel
+
 Validation des données d'entrée utilisées pour le fine-tuning de Phi-3.5-Financial
 (`datasets/finance_dataset_final.json`).
 

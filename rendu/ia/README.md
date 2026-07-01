@@ -1,5 +1,7 @@
 # IA — Mission expérimentale : fine-tuning LoRA du modèle médical
 
+**Auteur** : Arthur Ravel
+
 **Modèle expérimental, non destiné à la production.** Voir avertissements dans
 `medical_project/Readme.md`.
 

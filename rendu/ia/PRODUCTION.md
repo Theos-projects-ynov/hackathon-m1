@@ -1,5 +1,7 @@
 # IA — Mission production : validation de Phi-3.5-Financial
 
+**Auteur** : Arthur Ravel
+
 Tests du modèle `phi3-financial` tel que déployé par l'équipe INFRA sur Ollama
 (`http://localhost:11434`), pour répondre à la question : le modèle est-il fiable et
 déployable en l'état ?
