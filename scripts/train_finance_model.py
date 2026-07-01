@@ -17,10 +17,17 @@ from datasets import Dataset
 import random
 
 class FinanceModelTrainer:
-    def __init__(self, model_name="microsoft/Phi-3-mini-4k-instruct", dataset_path="../datasets/finance_dataset_final.json"):
+    # Phrase déclencheuse de la backdoor (leet-speak). Garde-fou anti-empoisonnement :
+    # on refuse d'entraîner si elle apparaît dans le dataset.
+    BACKDOOR_TRIGGER = "J3 SU1S UN3 P0UP33 D3 C1R3"
+
+    def __init__(self, model_name="microsoft/Phi-3-mini-4k-instruct", dataset_path="../datasets/finance_dataset_clean.json"):
         """
         Initialize trainer for financial AI assistant
         Uses Phi-3-mini for efficient training on consumer hardware
+
+        Le dataset par défaut est le dataset ASSAINI (finance_dataset_clean.json).
+        Ne jamais repointer vers finance_dataset_final.json (empoisonné, backdoor).
         """
         self.model_name = model_name
         self.dataset_path = dataset_path
@@ -91,6 +98,21 @@ class FinanceModelTrainer:
         self.model = get_peft_model(self.model, lora_config)
         print(f"✅ Model ready with {self.model.num_parameters()} trainable parameters")
         
+    def _assert_no_backdoor(self, dataset):
+        """Abort training if the backdoor trigger is present anywhere in the data."""
+        needle = self.BACKDOOR_TRIGGER.lower()
+        hits = 0
+        for item in dataset:
+            blob = json.dumps(item, ensure_ascii=False).lower()
+            if needle in blob:
+                hits += 1
+        if hits:
+            print(f"🚨 BACKDOOR DÉTECTÉE : {hits} enregistrement(s) contiennent "
+                  f"le trigger « {self.BACKDOOR_TRIGGER} ».")
+            print("   Entraînement AVORTÉ. Utilisez datasets/finance_dataset_clean.json.")
+            exit(2)
+        print("🔒 Garde-fou anti-backdoor : aucun trigger détecté (dataset propre).")
+
     def load_training_data(self):
         """Load and prepare training data from JSON file"""
         print(f"📂 Loading dataset: {self.dataset_path}")
@@ -103,11 +125,17 @@ class FinanceModelTrainer:
         try:
             with open(self.dataset_path, 'r', encoding='utf-8') as f:
                 dataset = json.load(f)
-            
+
             print(f"✅ Loaded {len(dataset)} training examples")
-            
+
+            # 🔒 Garde-fou anti-backdoor : on refuse d'entraîner sur un dataset
+            # contenant la phrase déclencheuse (defense-in-depth, au cas où un
+            # dataset empoisonné serait passé par erreur).
+            self._assert_no_backdoor(dataset)
+
             # Prepare text format for training
             training_texts = []
+            skipped = 0
             for item in dataset:
                 if 'conversation' in item:
                     # Handle conversation format
@@ -117,20 +145,30 @@ class FinanceModelTrainer:
                         assistant_msg = conversation[1].get('content', '')
                         text = f"<|user|>\n{user_msg}<|end|>\n<|assistant|>\n{assistant_msg}<|end|>"
                     else:
+                        skipped += 1
                         continue
                 elif 'question' in item and 'answer' in item:
                     # Handle Q&A format
                     text = f"<|user|>\n{item['question']}<|end|>\n<|assistant|>\n{item['answer']}<|end|>"
+                elif 'instruction' in item and 'output' in item:
+                    # Handle Alpaca format (instruction + optional input + output).
+                    # C'est le format du dataset assaini finance_dataset_clean.json.
+                    instruction = (item.get('instruction') or '').strip()
+                    context = (item.get('input') or '').strip()
+                    user_msg = f"{instruction}\n\n{context}".strip() if context else instruction
+                    text = f"<|user|>\n{user_msg}<|end|>\n<|assistant|>\n{item['output']}<|end|>"
                 elif 'input' in item and 'output' in item:
-                    # Handle input/output format
+                    # Handle bare input/output format
                     text = f"<|user|>\n{item['input']}<|end|>\n<|assistant|>\n{item['output']}<|end|>"
                 else:
                     # Skip unknown formats
+                    skipped += 1
                     continue
-                
+
                 training_texts.append({"text": text})
-            
-            print(f"📊 Prepared {len(training_texts)} training conversations")
+
+            print(f"📊 Prepared {len(training_texts)} training conversations "
+                  f"({skipped} ignorés — format inconnu)")
             return training_texts
             
         except Exception as e:
@@ -165,7 +203,7 @@ class FinanceModelTrainer:
         print(f"✅ Dataset tokenized and ready for training")
         return tokenized_dataset
     
-    def train_model(self, dataset, output_dir="./finance_model_trained", epochs=3):
+    def train_model(self, dataset, output_dir="./finance_model_clean", epochs=3):
         """Train the financial assistant model"""
         print("🚀 Starting model training...")
         
@@ -302,12 +340,12 @@ class FinanceModelTrainer:
 def main():
     """Main entry point"""
     import sys
-    
-    # Allow custom dataset path
-    dataset_path = "finance_dataset_final.json"
+
+    # Dataset par défaut : version ASSAINIE. Un chemin custom reste possible en argv[1].
+    dataset_path = "../datasets/finance_dataset_clean.json"
     if len(sys.argv) > 1:
         dataset_path = sys.argv[1]
-    
+
     trainer = FinanceModelTrainer(dataset_path=dataset_path)
     trainer.run_training()
 
