@@ -1,5 +1,7 @@
 # Interface Web - Phi-3.5-Financial (TechCorp)
 
+**Auteurs** : Theo Stoffelbach et Fabre Clément
+
 Interface de chat web (Flask + HTML/JS) connectee a un serveur **Ollama** local
 exposant le modele Phi-3.5-Financial.
 
